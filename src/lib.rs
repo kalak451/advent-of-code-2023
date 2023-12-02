@@ -1,6 +1,7 @@
 use std::fs;
 
 mod day_01;
+mod day_02;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
