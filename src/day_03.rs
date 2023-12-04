@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod day01 {
-    use std::cmp;
     use std::collections::HashMap;
 
     use itertools::Itertools;
 
+    use crate::grid::Grid;
     use crate::read_data_file;
 
     static SAMPLE: &str = r#"467..114..
@@ -18,20 +18,20 @@ mod day01 {
 ...$.*....
 .664.598.."#;
 
-    fn subgrid_contains_symbol(grid: &Vec<Vec<char>>, y:i32, start: i32, end: i32) -> Vec<(usize, usize, char)> {
-        let sym_start_x = cmp::max(start-1, 0) as usize;
-        let sym_end_x = cmp::min(end+1, grid[y as usize].len() as i32 -1) as usize;
+    fn subgrid_contains_symbol(grid: &Grid, y:usize, start: usize, end: usize) -> Vec<(usize, usize, &char)> {
+        let sym_start_x = if start==0 {start} else {start-1};
+        let sym_end_x = end + 1;
 
-        let sym_start_y = cmp::max(y-1, 0) as usize;
-        let sym_end_y = cmp::min(y+1, (grid.len()-1) as i32) as usize;
+        let sym_start_y = if y == 0 {y} else {y-1};
+        let sym_end_y = y+1;
 
         let mut res = Vec::new();
 
         for sy in sym_start_y..=sym_end_y {
             for sx in sym_start_x..=sym_end_x {
-                let c = grid[sy][sx];
-                if !c.is_ascii_digit() && c != '.' {
-                    res.push((sy,sx,c));
+                let c = grid.get(sx, sy).unwrap_or(&'.');
+                if !c.is_ascii_digit() && c != &'.' {
+                    res.push((sy, sx, c));
                 }
             }
         }
@@ -39,39 +39,47 @@ mod day01 {
         return res;
     }
 
-    fn process_part_1(grid: Vec<Vec<char>>) -> (i64, i64) {
-        let mut sum: i64 = 0;
+    fn process_part_1(grid: Grid) -> (i64, i64) {
+        let mut p1_sum: i64 = 0;
         let mut found = false;
         let mut start = 0;
         let mut end = 0;
 
-        let mut sym: HashMap<(usize, usize), Vec<i64>> = HashMap::new();
+        let mut p2_index: HashMap<(usize, usize), Vec<i64>> = HashMap::new();
 
-        for y in 0..grid.len() {
-            for x in 0.. grid[y].len() {
+        let (x_bounds, y_bounds) = grid.bounds();
+
+        for y in y_bounds.start..y_bounds.end {
+            for x in x_bounds.start..x_bounds.end {
                 if !found {
-                    if grid[y][x].is_ascii_digit() {
+                    if grid.get(x,y).unwrap().is_ascii_digit() {
                         found = true;
                         start = x;
                         end = x;
                     }
                 } else {
-                    if !grid[y][x].is_ascii_digit() || x == grid[y].len() - 1 {
+                    if !grid.pos_is_ascii_digit(x,y) || grid.is_x_bound(x) {
                         found = false;
-                        if x == grid[y].len() - 1 && grid[y][x].is_ascii_digit() {
+                        if grid.is_x_bound(x) && grid.pos_is_ascii_digit(x,y) {
                             end = x;
                         }
 
-                        let symbols = subgrid_contains_symbol(&grid, y as i32, start as i32, end as i32);
-                        if !symbols.is_empty() {
-                            let v = grid[y].get(start..=end).unwrap().iter().join("").parse::<i64>().unwrap();
-                            sum += v;
+                        let found_symbols = subgrid_contains_symbol(&grid, y, start, end);
+                        if !found_symbols.is_empty() {
+                            let value = grid.get_x_slice(start..=end, y)
+                                .unwrap()
+                                .iter()
+                                .join("")
+                                .parse::<i64>()
+                                .unwrap();
 
-                            symbols.iter()
-                                .filter(|s| s.2 == '*')
+                            p1_sum += value;
+
+                            found_symbols.iter()
+                                .filter(|s| s.2 == &'*')
                                 .for_each(|s| {
-                                    let e = sym.entry((s.0, s.1)).or_insert(Vec::new());
-                                    e.push(v);
+                                    let parts = p2_index.entry((s.0, s.1)).or_insert(Vec::new());
+                                    parts.push(value);
                                 })
                         }
 
@@ -82,12 +90,12 @@ mod day01 {
             }
         }
 
-        let ratio_sum = sym.values()
+        let p2_sum = p2_index.values()
             .filter(|v| v.len() == 2)
             .map(|v| v[0] * v[1])
             .sum();
 
-        return (sum, ratio_sum);
+        return (p1_sum, p2_sum);
     }
 
     #[test]
@@ -117,13 +125,8 @@ mod day01 {
         println!("Answer: {aaa:?}");
     }
 
-    fn to_grid(data: &str) -> Vec<Vec<char>> {
-        let grid: Vec<Vec<char>> = data
-            .lines()
-            .map(|l| l.chars().collect::<Vec<_>>())
-            .collect::<Vec<_>>();
-
-        grid
+    fn to_grid(data: &str) -> Grid {
+        return Grid::from_lines(data);
     }
 
     #[test]
