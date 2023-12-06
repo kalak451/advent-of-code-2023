@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod day05 {
     use std::cmp;
-    use std::ops::{Range, RangeInclusive};
+    use std::ops::Range;
 
     use itertools::Itertools;
     use regex::Regex;
@@ -43,7 +43,7 @@ humidity-to-location map:
 56 93 4"#;
 
     struct DestinationToSourceRange {
-        destination_start: u64,
+        // destination_start: u64,
         source_start: u64,
         length: u64,
         convert_factor: i128
@@ -52,10 +52,6 @@ humidity-to-location map:
     impl DestinationToSourceRange {
         fn source_range(&self) -> Range<u64> {
             return (self.source_start)..(self.source_start + self.length);
-        }
-
-        fn destination_range(&self) -> Range<u64> {
-            return (self.destination_start)..(self.destination_start + self.length);
         }
 
         fn map_source(&self, source: &u64) -> Option<u64> {
@@ -95,8 +91,8 @@ humidity-to-location map:
     }
 
     struct Section {
-        destination_type: String,
-        source_type: String,
+        _destination_type: String,
+        _source_type: String,
         ranges: Vec<DestinationToSourceRange>
     }
 
@@ -182,7 +178,6 @@ humidity-to-location map:
                 let convert_factor = destination_start as i128 - source_start as i128;
 
                 return DestinationToSourceRange {
-                    destination_start,
                     source_start,
                     length,
                     convert_factor
@@ -191,8 +186,8 @@ humidity-to-location map:
             .collect_vec();
 
         return Section {
-            source_type: source.to_owned(),
-            destination_type: destination.to_owned(),
+            _source_type: source.to_owned(),
+            _destination_type: destination.to_owned(),
             ranges
         }
     }
