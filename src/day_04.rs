@@ -15,8 +15,8 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"#;
 
     struct Card {
         card_no: i32,
-        winning_numbers: Vec<i32>,
-        numbers_i_have: Vec<i32>,
+        // winning_numbers: Vec<i32>,
+        // numbers_i_have: Vec<i32>,
         matches: usize
     }
 
@@ -31,8 +31,8 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"#;
 
         return Card {
             card_no: card_no.to_owned(),
-            winning_numbers: winning,
-            numbers_i_have: numbers,
+            // winning_numbers: winning,
+            // numbers_i_have: numbers,
             matches
         };
     }
@@ -100,7 +100,6 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"#;
             total = total + 1;
             let idx = queue.pop_back().unwrap();
             let c = &cards[idx];
-            let card_no = c.card_no;
 
             for i in c.card_no .. (c.card_no + c.matches as i32) {
                 queue.push_front(i as usize);
