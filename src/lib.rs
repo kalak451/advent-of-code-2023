@@ -7,6 +7,7 @@ mod grid;
 mod day_04;
 mod day_05;
 mod day_06;
+mod day_07;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
