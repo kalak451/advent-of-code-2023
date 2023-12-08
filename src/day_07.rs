@@ -15,7 +15,7 @@ QQQJA 483"#;
 
 
     struct Hand {
-        original: String,
+        _original: String,
         score_type: usize,
         tie_vector: Vec<usize>,
         wager: usize,
@@ -51,7 +51,7 @@ QQQJA 483"#;
             let (original, wager_str) = s.split(" ").collect_tuple().unwrap();
 
             return Hand {
-                original: original.to_owned(),
+                _original: original.to_owned(),
                 score_type: score_hand(original),
                 tie_vector: tie_vector(original),
                 wager: wager_str.parse::<usize>().unwrap(),
@@ -62,7 +62,7 @@ QQQJA 483"#;
             let (original, wager_str) = s.split(" ").collect_tuple().unwrap();
 
             return Hand {
-                original: original.to_owned(),
+                _original: original.to_owned(),
                 score_type: score_hand_p2(original),
                 tie_vector: tie_vector_p2(original),
                 wager: wager_str.parse::<usize>().unwrap(),
@@ -128,7 +128,7 @@ QQQJA 483"#;
 
         let joker_count: usize = if groups.contains_key(&'J') { groups[&'J'] } else { 0usize };
 
-        let counts = groups.into_iter().filter(|(k, v)| *k != 'J').map(|(k, v)| v).sorted().rev().collect_vec();
+        let counts = groups.into_iter().filter(|(k, _v)| *k != 'J').map(|(_k, v)| v).sorted().rev().collect_vec();
         let hand_types = build_hand_types_map();
 
         if joker_count == 5 {
