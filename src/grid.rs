@@ -1,6 +1,33 @@
 use std::ops::Range;
 use std::slice::SliceIndex;
 
+#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+pub struct Point {
+    pub x: usize,
+    pub y: usize
+}
+
+impl Point {
+    pub fn new(x: i32, y: i32) -> Self {
+        return Point {
+            x: x as usize,
+            y: y as usize
+        };
+    }
+
+    pub fn apply_dir_vector(&self, vec: &Vec<i32>) -> Option<Point> {
+        let new_x = self.x as i32 + vec[0];
+        let new_y = self.y as i32 + vec[1];
+
+        if new_x >= 0 && new_y >= 0 {
+            return Some(Point::new(new_x, new_y));
+        }
+
+        return None;
+    }
+}
+
+
 pub struct Grid {
     data: Vec<Vec<char>>,
     x_size: usize,
@@ -10,6 +37,10 @@ pub struct Grid {
 impl Grid {
     pub fn get(&self, x: usize, y: usize) -> Option<&char> {
         return self.data.get(y).map(|r| r.get(x)).flatten();
+    }
+
+    pub fn get_point(&self, point: &Point) -> Option<&char> {
+        return self.data.get(point.y).map(|r| r.get(point.x)).flatten();
     }
 
     pub fn get_x_slice<R: SliceIndex<[char], Output = [char]>>(&self, x_range: R, y: usize) -> Option<&[char]> {
