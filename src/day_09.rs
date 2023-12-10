@@ -7,7 +7,6 @@ mod day09 {
 1 3 6 10 15 21
 10 13 16 21 30 45
 "#;
-    static SAMPLE_2: &str = r#""#;
 
     fn parse_input(input: &str) -> Vec<Vec<i64>> {
         input
