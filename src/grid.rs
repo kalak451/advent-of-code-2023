@@ -39,6 +39,10 @@ impl Grid {
         return self.data.get(y).map(|r| r.get(x)).flatten();
     }
 
+    pub fn set(&mut self, x: usize, y: usize, c: char) {
+        self.data[y][x] = c;
+    }
+
     pub fn get_point(&self, point: &Point) -> Option<&char> {
         return self.data.get(point.y).map(|r| r.get(point.x)).flatten();
     }
