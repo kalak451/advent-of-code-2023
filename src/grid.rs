@@ -1,17 +1,19 @@
 use std::ops::Range;
 use std::slice::SliceIndex;
+use itertools::Itertools;
+use crate::grid::DIR::{EAST, NORTH, SOUTH, WEST};
 
 #[derive(Clone, Debug, Hash, Eq, PartialEq)]
 pub struct Point {
     pub x: usize,
-    pub y: usize
+    pub y: usize,
 }
 
 impl Point {
     pub fn new(x: i32, y: i32) -> Self {
         return Point {
             x: x as usize,
-            y: y as usize
+            y: y as usize,
         };
     }
 
@@ -30,8 +32,8 @@ impl Point {
 
 pub struct Grid {
     data: Vec<Vec<char>>,
-    x_size: usize,
-    y_size: usize
+    pub x_size: usize,
+    pub y_size: usize,
 }
 
 impl Grid {
@@ -47,7 +49,7 @@ impl Grid {
         return self.data.get(point.y).map(|r| r.get(point.x)).flatten();
     }
 
-    pub fn get_x_slice<R: SliceIndex<[char], Output = [char]>>(&self, x_range: R, y: usize) -> Option<&[char]> {
+    pub fn get_x_slice<R: SliceIndex<[char], Output=[char]>>(&self, x_range: R, y: usize) -> Option<&[char]> {
         return self.data.get(y).map(|r| r.get(x_range)).flatten();
     }
 
@@ -55,19 +57,71 @@ impl Grid {
         return (
             0..self.x_size,
             0..self.y_size
-            );
+        );
     }
 
     pub fn pos_is(&self, x: usize, y: usize, pred: fn(Option<&char>) -> bool) -> bool {
-        pred(self.get(x,y))
+        pred(self.get(x, y))
     }
 
     pub fn pos_is_ascii_digit(&self, x: usize, y: usize) -> bool {
-        self.pos_is(x,y, |o| o.map(|c| c.is_ascii_digit()).unwrap_or(false))
+        self.pos_is(x, y, |o| o.map(|c| c.is_ascii_digit()).unwrap_or(false))
     }
 
     pub fn is_x_bound(&self, x: usize) -> bool {
         return x == 0 || x == self.x_size - 1;
+    }
+
+    pub fn get_points(&self, from: &Point, in_dir_of: &DIR) -> Vec<Point> {
+        if *in_dir_of == NORTH && from.y == 0 {
+            return vec![];
+        }
+
+        if *in_dir_of == SOUTH && from.y == self.y_size - 1 {
+            return vec![];
+        }
+
+        if *in_dir_of == WEST && from.x == 0 {
+            return vec![];
+        }
+
+        if *in_dir_of == EAST && from.x == self.x_size - 1 {
+            return vec![];
+        }
+
+        let (xr, yr) = match in_dir_of {
+            EAST => (from.x + 1..self.x_size, from.y..from.y + 1),
+            WEST => (0..from.x, from.y..from.y + 1),
+            SOUTH => (from.x..from.x + 1, from.y + 1..self.y_size),
+            NORTH => (from.x..from.x + 1, 0..from.y)
+        };
+
+        let mut result = vec![];
+
+        for y in yr.to_owned() {
+            for x in xr.to_owned() {
+                result.push(Point::new(x as i32, y as i32));
+            }
+        }
+
+        if *in_dir_of == WEST || *in_dir_of == NORTH {
+            result.reverse();
+        }
+
+        return result;
+    }
+
+    pub fn print(&self) {
+        for r in &self.data {
+            let l = r.into_iter().join("");
+            println!("{l}")
+        }
+    }
+
+    pub fn print_string(&self) -> String {
+        self.data.iter()
+            .map(|r| r.into_iter().join(""))
+            .join("\n")
     }
 
     pub fn from_lines(s: &str) -> Grid {
@@ -82,7 +136,15 @@ impl Grid {
         return Grid {
             data,
             x_size,
-            y_size
+            y_size,
         };
     }
+}
+
+#[derive(PartialEq, Eq)]
+pub enum DIR {
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST,
 }
