@@ -111,6 +111,39 @@ impl Grid {
         return result;
     }
 
+    pub fn try_move(&self, p: &Point, dir: &DIR) -> Option<Point> {
+        match dir {
+            NORTH => {
+                if p.y == 0 {
+                    None
+                } else {
+                    Some(Point::new(p.x as i32, p.y as i32 - 1))
+                }
+            }
+            SOUTH => {
+                if p.y == self.y_size - 1 {
+                    None
+                } else {
+                    Some(Point::new(p.x as i32, p.y as i32 + 1))
+                }
+            }
+            EAST => {
+                if p.x == self.x_size - 1 {
+                    None
+                } else {
+                    Some(Point::new(p.x as i32 + 1, p.y as i32))
+                }
+            }
+            WEST => {
+                if p.x == 0 {
+                    None
+                } else {
+                    Some(Point::new(p.x as i32 - 1, p.y as i32))
+                }
+            }
+        }
+    }
+
     pub fn print(&self) {
         for r in &self.data {
             let l = r.into_iter().join("");
@@ -141,7 +174,7 @@ impl Grid {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(Clone, Hash, PartialEq, Eq, Debug, Copy)]
 pub enum DIR {
     NORTH,
     SOUTH,

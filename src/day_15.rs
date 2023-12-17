@@ -31,7 +31,7 @@ mod day15 {
     fn apply_p2(input: &str) -> usize {
         let mut boxes: Vec<VecDeque<(&str, u8)>> = Vec::with_capacity(256);
 
-        for i in 0..256 {
+        for _ in 0..256 {
             boxes.push(VecDeque::new());
         }
 
@@ -66,7 +66,7 @@ mod day15 {
         for i in 0..256 {
             let box_list = &boxes[i];
             for j in 0..box_list.len() {
-                let (label, value) = box_list[j];
+                let (_, value) = box_list[j];
                 let score = (i + 1) * (j + 1) * value as usize;
                 result = result + score;
             }
