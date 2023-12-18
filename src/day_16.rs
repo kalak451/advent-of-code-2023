@@ -1,11 +1,11 @@
 #[cfg(test)]
 mod day16 {
-    use std::collections::{HashMap, HashSet, VecDeque};
-    use itertools::Itertools;
+    use std::collections::{HashSet, VecDeque};
+
     use DIR::{EAST, NORTH, SOUTH};
+
     use crate::grid::{DIR, Grid, Point};
     use crate::grid::DIR::WEST;
-
     use crate::read_data_file;
 
     static SAMPLE_1: &str = r#".|...\....
@@ -94,7 +94,7 @@ mod day16 {
                 if maybe_np.is_some() {
                     let np = maybe_np.unwrap();
 
-                    if !grid_energy.contains(&(np, nd)) {
+                    if !grid_energy.contains(&(np.to_owned(), nd)) {
                         queue.push_front((np.to_owned(), nd));
                     }
                 }

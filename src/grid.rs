@@ -3,7 +3,7 @@ use std::slice::SliceIndex;
 use itertools::Itertools;
 use crate::grid::DIR::{EAST, NORTH, SOUTH, WEST};
 
-#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Point {
     pub x: usize,
     pub y: usize,
@@ -174,7 +174,7 @@ impl Grid {
     }
 }
 
-#[derive(Clone, Hash, PartialEq, Eq, Debug, Copy)]
+#[derive(Clone, Hash, PartialEq, Eq, Debug, Copy, Ord, PartialOrd)]
 pub enum DIR {
     NORTH,
     SOUTH,
