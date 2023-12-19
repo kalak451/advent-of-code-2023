@@ -45,6 +45,10 @@ impl Grid {
         self.data[y][x] = c;
     }
 
+    // pub fn set_point(&mut self, p: &Point, c: char) {
+    //     self.set(p.x, p.y, c);
+    // }
+
     pub fn get_point(&self, point: &Point) -> Option<&char> {
         return self.data.get(point.y).map(|r| r.get(point.x)).flatten();
     }
@@ -172,6 +176,16 @@ impl Grid {
             y_size,
         };
     }
+
+    // pub fn from_size(x_size: usize, y_size: usize) -> Grid {
+    //     let data = vec![vec!['.'; x_size]; y_size];
+    //
+    //     return Grid {
+    //         data,
+    //         x_size,
+    //         y_size
+    //     };
+    // }
 }
 
 #[derive(Clone, Hash, PartialEq, Eq, Debug, Copy, Ord, PartialOrd)]
