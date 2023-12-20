@@ -171,7 +171,7 @@ hdj{m>838:A,pv}
     fn apply_p2(input: &str) -> i64 {
         let (workflows, _) = parse_data(input);
 
-        let (approved, rejected) = walk_tree(PartRange::new(), workflows.get("in").unwrap(), &workflows);
+        let (approved, _) = walk_tree(PartRange::new(), workflows.get("in").unwrap(), &workflows);
 
         approved
             .iter()
