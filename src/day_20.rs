@@ -1,11 +1,11 @@
 #[cfg(test)]
-mod day18 {
+mod day20 {
     use std::any::Any;
     use std::collections::{HashMap, VecDeque};
 
     use itertools::Itertools;
 
-    use crate::day_20::day18::PV::{HIGH, LOW};
+    use crate::day_20::day20::PV::{HIGH, LOW};
     use crate::read_data_file;
 
     static SAMPLE_1: &str = r#"broadcaster -> a, b, c
@@ -279,14 +279,6 @@ mod day18 {
 
 
         let results = apply_p1(data);
-        println!("Answer: {results:?}");
-    }
-
-    #[test]
-    fn sample_1_p2() {
-        let data = SAMPLE_1;
-
-        let results = 0;
         println!("Answer: {results:?}");
     }
 

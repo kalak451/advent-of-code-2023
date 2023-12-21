@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod day18 {
+mod day19 {
     use std::cmp;
     use std::collections::HashMap;
 
