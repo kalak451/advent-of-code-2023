@@ -258,7 +258,7 @@ mod day18 {
                 return i;
             }
 
-            if i == 100000 {
+            if i == 10000 {
                 panic!("too long");
             }
         }
