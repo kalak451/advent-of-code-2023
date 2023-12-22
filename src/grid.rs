@@ -53,6 +53,18 @@ impl Grid {
         return self.data.get(point.y).map(|r| r.get(point.x)).flatten();
     }
 
+    pub fn get_i(&self, x: i32, y: i32) -> Option<&char> {
+        if x < 0 || x >= self.x_size as i32 {
+            return None;
+        }
+
+        if y < 0 || y >= self.y_size as i32 {
+            return None;
+        }
+
+        return self.get(x as usize, y as usize);
+    }
+
     pub fn get_x_slice<R: SliceIndex<[char], Output=[char]>>(&self, x_range: R, y: usize) -> Option<&[char]> {
         return self.data.get(y).map(|r| r.get(x_range)).flatten();
     }
@@ -175,6 +187,20 @@ impl Grid {
             x_size,
             y_size,
         };
+    }
+
+    pub fn find_first(&self, c: char) -> Option<Point> {
+        let (x_bounds, y_bounds) = self.bounds();
+
+        for y in y_bounds.to_owned() {
+            for x in x_bounds.to_owned() {
+                if self.data[y][x] == c {
+                    return Some(Point::new(x as i32, y as i32))
+                }
+            }
+        }
+
+        return None;
     }
 
     // pub fn from_size(x_size: usize, y_size: usize) -> Grid {
