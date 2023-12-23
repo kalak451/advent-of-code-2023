@@ -2,7 +2,6 @@
 mod day21 {
     use std::collections::{HashSet, VecDeque};
 
-    use itertools::Itertools;
 
     use crate::grid::{DIR, Grid};
     use crate::grid::DIR::{EAST, NORTH, SOUTH, WEST};
@@ -161,7 +160,7 @@ mod day21 {
 
     #[test]
     fn part_2() {
-        let data = read_data_file(21, "input.txt");
+        // let data = read_data_file(21, "input.txt");
 
         let a0 = 3699f64;
         let a1 = 33137f64;
