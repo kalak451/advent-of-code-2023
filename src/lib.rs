@@ -27,6 +27,7 @@ mod day_21;
 mod day_22;
 mod day_23;
 mod grid_graph;
+mod day_24;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
